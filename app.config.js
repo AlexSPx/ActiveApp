@@ -22,7 +22,8 @@ export default {
       foregroundImage: "./assets/adaptive-icon.png",
       backgroundColor: "#ffffff",
     },
-    googleServicesFile: "./google-services.json",
+    googleServicesFile:
+      process.env.GOOGLE_SERVICECS_DEV || "./google-services.json",
     package: IS_DEV ? "com.alexspx.active.dev" : "com.alexspx.active",
   },
   web: {

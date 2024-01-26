@@ -5,7 +5,10 @@ import { useTheme, Text } from "react-native-paper";
 import useWorkoutService, {
   WorkoutHistory as WorkoutHistoryProps,
 } from "../../services/WorkoutService";
-import { HistoryCard } from "../../components/workout_history/HistoryCard";
+import {
+  HistoryCard,
+  HistoryCardLoading,
+} from "../../components/workout_history/HistoryCard";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import useQuery from "../../utils/useQuery";
 
@@ -59,6 +62,7 @@ export default function WorkoutHistory({
 
   return (
     <MainView colors={colors}>
+      <HistoryCardLoading />
       {orderedRecords ? (
         <FlatList
           data={Array.from(orderedRecords.keys()).reverse()}
