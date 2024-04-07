@@ -5,6 +5,7 @@ import {
   WorkoutExerciseCurrent,
 } from "../states/RunnigWorkoutState";
 import { AuthState } from "../states/authState";
+import { WorkoutHistory } from "../services/WorkoutService";
 
 export async function saveSettings(value: Settings) {
   if (!value) return;
@@ -47,7 +48,11 @@ export async function getCurrentExercises(): Promise<
   return JSON.parse(fetchStorage);
 }
 
-//////////////////////////////////////////////////////////////////
+export async function saveWorkoutHistory(value: WorkoutHistory[]) {
+  if (!value) return;
+
+  await SecureStore.setItemAsync("workoutHistory", JSON.stringify(value));
+}
 
 export async function getAuth(): Promise<null | AuthState> {
   const fetchStorage = await SecureStore.getItemAsync("auth");

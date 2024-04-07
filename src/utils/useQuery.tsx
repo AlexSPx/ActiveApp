@@ -1,14 +1,24 @@
-import { useEffect, useState } from "react";
-import { showError } from "../services/utils";
+import { useEffect, useState } from 'react';
+import { showError } from '../services/utils';
+import { SetterOrUpdater } from 'recoil';
 
 interface Query<T> {
   serviceCall: () => Promise<T>;
+  cache?: {
+    update: SetterOrUpdater<T>;
+  };
+  initialFetch?: boolean;
 }
 
-export default function useQuery<T>({ serviceCall }: Query<T>) {
+export default function useQuery<T>({
+  serviceCall,
+  cache,
+  initialFetch = true,
+}: Query<T>) {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<T>();
   const [refreshes, setRefreshes] = useState(0);
+  const [initialTry, setInitialTry] = useState(false);
 
   const refresh = () => setRefreshes((prev) => ++prev);
 
@@ -19,6 +29,9 @@ export default function useQuery<T>({ serviceCall }: Query<T>) {
       const response = await serviceCall();
 
       setData(response);
+      if (cache) {
+        cache.update(response);
+      }
     } catch (error) {
       showError(error);
     } finally {
@@ -27,7 +40,11 @@ export default function useQuery<T>({ serviceCall }: Query<T>) {
   };
 
   useEffect(() => {
-    fetchData();
+    if (initialFetch || initialTry) {
+      fetchData();
+    }
+
+    setInitialTry(true);
   }, [refreshes]);
 
   return { loading, data, refresh };

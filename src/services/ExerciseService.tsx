@@ -75,13 +75,9 @@ export default function useExerciseService() {
     try {
       const records = await axios.post<ExerciseRecord[]>(
         "/exercise/record/get-all",
-        ids,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        ids
       );
+      
 
       return records.data;
     } catch (error) {

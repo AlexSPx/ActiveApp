@@ -1,5 +1,5 @@
 import axios, { HttpStatusCode, isAxiosError } from "axios";
-import { API_ADDRESS } from "../utils/configs";
+import { API_ADDRESS } from "../utils/conf";
 
 export type ErrorResponse = {
   error: string;

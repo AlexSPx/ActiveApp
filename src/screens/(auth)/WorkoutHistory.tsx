@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from "react";
-import MainView from "../../components/MainView";
-import { FlatList, RefreshControl, View } from "react-native";
-import { useTheme, Text } from "react-native-paper";
+import React, { useEffect, useState } from 'react';
+import MainView from '../../components/MainView';
+import { FlatList, RefreshControl, View } from 'react-native';
+import { useTheme, Text } from 'react-native-paper';
 import useWorkoutService, {
   WorkoutHistory as WorkoutHistoryProps,
-} from "../../services/WorkoutService";
+} from '../../services/WorkoutService';
 import {
   HistoryCard,
   HistoryCardLoading,
-} from "../../components/workout_history/HistoryCard";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import useQuery from "../../utils/useQuery";
+} from '../../components/workout_history/HistoryCard';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import useQuery from '../../utils/useQuery';
+import { useRecoilState } from 'recoil';
+import { workoutHistory } from '../../states/WorkoutHistory';
 
 export default function WorkoutHistory({
   navigation,
@@ -18,9 +20,14 @@ export default function WorkoutHistory({
   const { colors } = useTheme();
 
   const { getWorkoutHistory } = useWorkoutService();
+  const [history, setHistory] = useRecoilState(workoutHistory);
 
-  const { data, loading, refresh } = useQuery<WorkoutHistoryProps[]>({
+  const { loading, refresh } = useQuery<WorkoutHistoryProps[]>({
     serviceCall: () => getWorkoutHistory(),
+    cache: {
+      update: setHistory,
+    },
+    initialFetch: false,
   });
 
   const [orderedRecords, setOrderedRecords] =
@@ -30,26 +37,33 @@ export default function WorkoutHistory({
 
   const onRefresh = () => {
     setRefreshing(true);
-    refresh();
+    try {
+      refresh();
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   useEffect(() => {
     const monthMap = new Map<string, WorkoutHistoryProps[]>();
 
     const formatOptions: Intl.DateTimeFormatOptions = {
-      day: "numeric",
-      month: "long",
+      day: 'numeric',
+      month: 'long',
     };
 
-    data?.forEach((record) => {
+    history?.forEach((record) => {
       const date = new Date(record.finishedAt);
-      const month = Intl.DateTimeFormat("en-US", formatOptions).format(date);
 
-      if (!monthMap.has(month)) {
-        monthMap.set(month, []);
+      const month = Intl.DateTimeFormat('en-US', formatOptions)
+        .format(date)
+        .split(' ');
+
+      if (!monthMap.has(month[0])) {
+        monthMap.set(month[0], []);
       }
 
-      const monthWorkouts = monthMap.get(month);
+      const monthWorkouts = monthMap.get(month[0]);
       if (monthWorkouts) {
         monthWorkouts.push(record);
       }
@@ -58,14 +72,14 @@ export default function WorkoutHistory({
     setOrderedRecords(monthMap);
 
     setRefreshing(false);
-  }, [data]);
+  }, [history]);
 
   return (
     <MainView colors={colors}>
-      <HistoryCardLoading />
+      {/* <HistoryCardLoading /> */}
       {orderedRecords ? (
         <FlatList
-          data={Array.from(orderedRecords.keys()).reverse()}
+          data={Array.from(orderedRecords.keys()).sort()}
           scrollEnabled
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -89,7 +103,7 @@ export default function WorkoutHistory({
                   <HistoryCard
                     record={item}
                     onPressFunc={() =>
-                      navigation.navigate("workoutHistoryView", {
+                      navigation.navigate('workoutHistoryView', {
                         workout: item,
                       })
                     }

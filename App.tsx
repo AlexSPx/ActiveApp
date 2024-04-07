@@ -1,25 +1,26 @@
-import React, { useEffect, useMemo } from "react";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import React, { useEffect, useMemo } from 'react';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
   MD3DarkTheme as DefaultLightTheme,
   MD3LightTheme as DefaultDarkTheme,
   PaperProvider,
-} from "react-native-paper";
-import { StatusBar } from "expo-status-bar";
-import { theme as AppTheme } from "./src/themes/theme";
-import { useMaterial3Theme } from "@pchmn/expo-material3-theme";
-import { useColorScheme } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { RecoilRoot } from "recoil";
-import { SettingsProvider, useSettings } from "./src/states/SettingsContext";
-import CacheRetriever from "./src/states/CacheRetriever";
-import Navigation from "./src/navigation";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+} from 'react-native-paper';
+import { StatusBar } from 'expo-status-bar';
+import { theme as AppTheme } from './src/themes/theme';
+import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
+import { useColorScheme } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { RecoilRoot } from 'recoil';
+import { SettingsProvider, useSettings } from './src/states/SettingsContext';
+import CacheRetriever from './src/states/CacheRetriever';
+import Navigation from './src/navigation';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { decode, encode } from "base-64";
-import { GoogleProvider } from "./src/states/GoogleProvider";
+import { decode, encode } from 'base-64';
+import { GoogleProvider } from './src/states/GoogleProvider';
+import useWorkoutService from './src/services/WorkoutService';
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -45,18 +46,8 @@ const DarkTheme = {
 
 const layout = () => {
   const [fontsLoaded] = useFonts({
-    Raleway: require("./assets/Raleway-Regular.ttf"),
+    Raleway: require('./assets/Raleway-Regular.ttf'),
   });
-
-  useEffect(() => {
-    const dismountSplash = async () => {
-      if (fontsLoaded) {
-        await SplashScreen.hideAsync();
-      }
-    };
-
-    dismountSplash();
-  }, [fontsLoaded]);
 
   if (!fontsLoaded) {
     return null;
@@ -66,7 +57,9 @@ const layout = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
         <RecoilRoot>
-          <CacheRetriever>
+          <CacheRetriever
+            hideSplash={async () => await SplashScreen.hideAsync()}
+          >
             <GoogleProvider>
               <SafeAreaProvider>
                 <SettingsProvider>
@@ -90,14 +83,14 @@ const ColorsSchemeProvider = ({ children }: { children: React.ReactNode }) => {
 
   const paperTheme = useMemo(() => {
     switch (settings.theme) {
-      case "default-light":
+      case 'default-light':
         return LightTheme;
-      case "default-dark":
+      case 'default-dark':
         return DarkTheme;
-      case "default-system":
-        return colorScheme === "dark" ? DarkTheme : LightTheme;
-      case "colors-system":
-        return colorScheme === "dark"
+      case 'default-system':
+        return colorScheme === 'dark' ? DarkTheme : LightTheme;
+      case 'colors-system':
+        return colorScheme === 'dark'
           ? { ...DarkTheme, colors: theme.dark }
           : { ...LightTheme, colors: theme.light };
 

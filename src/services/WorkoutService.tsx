@@ -1,8 +1,8 @@
-import { useState } from "react";
-import useAuthService from "./AuthService";
-import { handleError } from "../api/utils";
-import useAxios from "../utils/useAxios";
-import useExerciseService, { ExerciseRecord } from "./ExerciseService";
+import { useState } from 'react';
+import useAuthService from './AuthService';
+import { handleError } from '../api/utils';
+import useAxios from '../utils/useAxios';
+import useExerciseService, { ExerciseRecord } from './ExerciseService';
 
 interface WorkoutResponse {
   id: string;
@@ -73,32 +73,32 @@ export default function useWorkoutService() {
   const getWorkouts = async (): Promise<WorkoutRecordWE[]> => {
     try {
       const response = await axios.get<WorkoutResponse[]>(
-        `/workout?page=${workoutsPage}`
+        `/workout?page=${workoutsPage}`,
       );
 
       const exerciseWithRecords = await Promise.all(
         response.data.map(async ({ workoutStructure, ...workout }) => {
           const exercises = await getRecords(
-            workoutStructure.exerciseRecordIds
+            workoutStructure.exerciseRecordIds,
           );
 
           return {
             structure: exercises,
             ...workout,
           };
-        })
+        }),
       );
 
       return exerciseWithRecords;
     } catch (error) {
-      if (error instanceof Object && "message" in error) throw error;
+      if (error instanceof Object && 'message' in error) throw error;
       throw handleError(error);
     }
   };
 
   const createWorkout = async (workout: WorkoutCreate) => {
     try {
-      const response = await axios.post<string>("/workout", workout);
+      const response = await axios.post<string>('/workout', workout);
 
       return response.data;
     } catch (error) {
@@ -109,8 +109,8 @@ export default function useWorkoutService() {
   const createRecord = async (recordToCreate: CreateRecordRequest) => {
     try {
       const response = await axios.post<string>(
-        "/workout/record",
-        recordToCreate
+        '/workout/record',
+        recordToCreate,
       );
 
       return response.data;
@@ -121,9 +121,8 @@ export default function useWorkoutService() {
 
   const getWorkoutHistory = async () => {
     try {
-      const records = await axios.get<WorkoutRecordResponse[]>(
-        "/workout/record"
-      );
+      const records =
+        await axios.get<WorkoutRecordResponse[]>('/workout/record');
 
       const response = await Promise.all(
         records.data.map(async ({ exerciseRecordIds, ...record }) => {
@@ -133,7 +132,7 @@ export default function useWorkoutService() {
             ...record,
             exercises: exercises,
           };
-        })
+        }),
       );
 
       return response;

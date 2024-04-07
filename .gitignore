@@ -158,4 +158,4 @@ docs/pages/versions/*/react-native/*.diff
 #
 keystore
 google-services.json
-src/utils/configs.ts
+src/utils/conf.ts

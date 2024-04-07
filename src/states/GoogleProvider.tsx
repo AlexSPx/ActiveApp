@@ -1,6 +1,6 @@
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import React, { ReactNode, useEffect } from "react";
-import { GOOGLE_WEB_CLIENT } from "../utils/configs";
+import { GOOGLE_WEB_CLIENT } from "../utils/conf";
 
 export function GoogleProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
