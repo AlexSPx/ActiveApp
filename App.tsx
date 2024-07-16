@@ -21,6 +21,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { decode, encode } from 'base-64';
 import { GoogleProvider } from './src/states/GoogleProvider';
 import useWorkoutService from './src/services/WorkoutService';
+import { NavigationContainer } from '@react-navigation/native';
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -54,25 +55,27 @@ const layout = () => {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <QueryClientProvider client={queryClient}>
-        <RecoilRoot>
-          <CacheRetriever
-            hideSplash={async () => await SplashScreen.hideAsync()}
-          >
-            <GoogleProvider>
-              <SafeAreaProvider>
-                <SettingsProvider>
-                  <ColorsSchemeProvider>
-                    <Navigation />
-                  </ColorsSchemeProvider>
-                </SettingsProvider>
-              </SafeAreaProvider>
-            </GoogleProvider>
-          </CacheRetriever>
-        </RecoilRoot>
-      </QueryClientProvider>
-    </GestureHandlerRootView>
+    <NavigationContainer>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <QueryClientProvider client={queryClient}>
+          <RecoilRoot>
+            <CacheRetriever
+              hideSplash={async () => await SplashScreen.hideAsync()}
+            >
+              <GoogleProvider>
+                <SafeAreaProvider>
+                  <SettingsProvider>
+                    <ColorsSchemeProvider>
+                      <Navigation />
+                    </ColorsSchemeProvider>
+                  </SettingsProvider>
+                </SafeAreaProvider>
+              </GoogleProvider>
+            </CacheRetriever>
+          </RecoilRoot>
+        </QueryClientProvider>
+      </GestureHandlerRootView>
+    </NavigationContainer>
   );
 };
 

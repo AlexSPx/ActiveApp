@@ -3,7 +3,7 @@ import {
   getAuth,
   getCurrentExercises,
   getCurrentWorkout,
-} from '../utils/secureStore';
+} from '../stores/secureStore';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { currentExercisesAtom, currentWorkoutAtom } from './RunnigWorkoutState';
 import { authState } from './authState';

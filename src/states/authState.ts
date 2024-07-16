@@ -1,6 +1,6 @@
-import { atom, selector } from "recoil";
-import { User } from "../api/auth.api";
-import { saveAuth } from "../utils/secureStore";
+import { atom, selector } from 'recoil';
+import { User } from '../api/auth.api';
+import { saveAuth } from '../stores/secureStore';
 
 export interface AuthState {
   isAuthenticated: boolean;
@@ -10,7 +10,7 @@ export interface AuthState {
 }
 
 export const authState = atom<AuthState>({
-  key: "auth",
+  key: 'auth',
   default: {
     isAuthenticated: false,
     user: null,
@@ -27,21 +27,21 @@ export const authState = atom<AuthState>({
 });
 
 export const isAuthenticatedSelector = selector({
-  key: "isAuthenticatedSelector",
+  key: 'isAuthenticatedSelector',
   get: ({ get }) => {
     return get(authState).isAuthenticated;
   },
 });
 
 export const userSelector = selector({
-  key: "userSelector",
+  key: 'userSelector',
   get: ({ get }) => {
     return get(authState).user;
   },
 });
 
 export const tokensSelector = selector({
-  key: "tokensSelector",
+  key: 'tokensSelector',
   get: ({ get }) => {
     const authData = get(authState);
     return {

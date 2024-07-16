@@ -1,31 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, useTheme, Text, Chip } from "react-native-paper";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import React, { useEffect, useState } from 'react';
+import { FlatList } from 'react-native';
+import { Chip, Text, useTheme } from 'react-native-paper';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import ExerciseCard, {
+  Exercise,
+} from '../../components/exercise_search/ExerciseCard';
+import MainView from '../../components/MainView';
+import { createExercisesAtom } from '../../states/CreateWorkoutState';
 import {
   exerciseSearchQueryAtom,
   exerciseSearchQueryResultsAtom,
   removeFilter,
-} from "../../states/ExerciseSearchState";
-import { createExercisesAtom } from "../../states/CreateWorkoutState";
-import MainView from "../../components/MainView";
-import { FlatList } from "react-native";
-import { extractTags } from "../../utils/extractTags";
-import ExerciseCard, {
-  Exercise,
-} from "../../components/exercise_search/ExerciseCard";
-import { addExercise } from "../../utils/exerciseHelpers";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+} from '../../states/ExerciseSearchState';
+import { addExercise } from '../../utils/exerciseHelpers';
+import { extractTags } from '../../utils/extractTags';
+import { AuthStackProps } from '../../navigation/AuthNavigation';
+import { SearchExerciseStackProps } from '../../navigation/ExerciseSearchNavigation';
 
 export default function SearchExercise({
   navigation,
-}: NativeStackScreenProps<any>) {
+  route,
+}: NativeStackScreenProps<SearchExerciseStackProps, 'search'>) {
   const { colors } = useTheme();
+  const { onSelectExercise } = route.params;
 
   const [query, setQuery] = useRecoilState(exerciseSearchQueryAtom);
   const [exercises, setExercises] = useRecoilState(
-    exerciseSearchQueryResultsAtom
+    exerciseSearchQueryResultsAtom,
   );
-  const setCreateExercises = useSetRecoilState(createExercisesAtom);
+
   const [filters, setFilters] = useState(extractTags(query.tags));
   const [page, setPage] = useState(1);
 
@@ -57,7 +61,7 @@ export default function SearchExercise({
             </Text>
           )}
           contentContainerStyle={{
-            flexDirection: "column",
+            flexDirection: 'column',
           }}
           numColumns={3}
           data={filters}
@@ -92,9 +96,7 @@ export default function SearchExercise({
             colors={colors}
             exercise={item}
             func={(exercise: Exercise) => {
-              setCreateExercises((prev) =>
-                addExercise(prev, exercise.id, exercise.title)
-              );
+              onSelectExercise(exercise);
               navigation.goBack();
             }}
           />
