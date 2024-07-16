@@ -7,14 +7,13 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
-import useExerciseService from '../../services/ExerciseService';
-import InvoceSearch from '../search_exercise/InvokeSearch';
 import InvokeSearch from '../search_exercise/InvokeSearch';
 import { useState } from 'react';
 import { Exercise } from '../exercise_search/ExerciseCard';
-import { ExerciseWidgetType } from './ExerciseWidget';
 import { showMessage } from '../../services/utils';
 import { storage } from '../../stores/storage';
+import { ExerciseWidgetType, widgetsState } from '../../states/Widgets';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 export default function CreateWidgetMenu({
   visible,
@@ -24,6 +23,8 @@ export default function CreateWidgetMenu({
   setVisible: (to: boolean) => void;
 }) {
   const { colors } = useTheme();
+
+  const [widgets, setWidgets] = useRecoilState(widgetsState);
 
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [widgetType, setWidgetType] = useState<ExerciseWidgetType>(
@@ -38,27 +39,21 @@ export default function CreateWidgetMenu({
 
     const key = exercise.id + widgetType;
 
-    if (storage.getString(key)) {
+    if (widgets.some((widget) => widget.key === key)) {
       showMessage('Widget already exists');
       return;
     }
 
-    const widgetsStr = storage.getString('widgets');
-
-    const widgets: string[] = widgetsStr ? JSON.parse(widgetsStr) : [];
-    widgets.push(key);
-    storage.set('widgets', JSON.stringify(widgets));
-
-    storage.set(
-      key,
-      JSON.stringify({
+    setWidgets((widgets) => [
+      ...widgets,
+      {
+        key,
         id: exercise.id,
         name: exercise.title,
         data: [],
         type: widgetType,
-      }),
-    );
-
+      },
+    ]);
     setVisible(false);
   };
 

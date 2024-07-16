@@ -9,6 +9,8 @@ import { currentExercisesAtom, currentWorkoutAtom } from './RunnigWorkoutState';
 import { authState } from './authState';
 import { workoutHistory } from './WorkoutHistory';
 import useWorkoutService from '../services/WorkoutService';
+import { storage } from '../stores/storage';
+import { widgetsState } from './Widgets';
 
 export default function CacheRetriever({
   children,
@@ -19,16 +21,16 @@ export default function CacheRetriever({
 }) {
   const setCurrentWorkout = useSetRecoilState(currentWorkoutAtom);
   const setCurrentExercises = useSetRecoilState(currentExercisesAtom);
-  const [auth, setAuthState] = useRecoilState(authState);
   const setWorkoutHistory = useSetRecoilState(workoutHistory);
+  const setWidgets = useSetRecoilState(widgetsState);
+
+  const [auth, setAuthState] = useRecoilState(authState);
 
   const { getWorkoutHistory } = useWorkoutService();
 
   useEffect(() => {
     const userCache = async () => {
       const auth = await getAuth();
-
-      console.log('auth fetched');
 
       if (auth) {
         setAuthState(auth);
@@ -38,6 +40,11 @@ export default function CacheRetriever({
     const workoutCache = async () => {
       const currEx = await getCurrentExercises();
       const currWo = await getCurrentWorkout();
+
+      if (!storage.contains('widgets')) {
+        storage.set('widgets', '[]');
+      }
+      setWidgets(JSON.parse(storage.getString('widgets')!));
 
       if (currEx && currWo) {
         setCurrentWorkout(currWo);
@@ -51,8 +58,6 @@ export default function CacheRetriever({
 
   useEffect(() => {
     const fetch = async () => {
-      console.log('fetching history');
-
       if (!auth.isAuthenticated) return;
 
       const workoutHistory = await getWorkoutHistory();

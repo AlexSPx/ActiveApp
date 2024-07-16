@@ -1,37 +1,38 @@
-import * as SecureStore from "expo-secure-store";
-import { Settings } from "../states/SettingsContext";
+import * as SecureStore from 'expo-secure-store';
+import { Settings } from '../states/SettingsContext';
 import {
   WorkoutCurrent,
   WorkoutExerciseCurrent,
-} from "../states/RunnigWorkoutState";
-import { AuthState } from "../states/authState";
-import { WorkoutHistory } from "../services/WorkoutService";
+} from '../states/RunnigWorkoutState';
+import { AuthState } from '../states/authState';
+import { WorkoutHistory } from '../services/WorkoutService';
+import { storage } from './storage';
 
 export async function saveSettings(value: Settings) {
   if (!value) return;
 
-  await SecureStore.setItemAsync("settings", JSON.stringify(value));
+  storage.set('settings', JSON.stringify(value));
 }
 
 export async function getSettings(): Promise<Settings | null> {
-  let result = await SecureStore.getItemAsync("settings");
+  let result = storage.getString('settings');
   return result ? JSON.parse(result) : result;
 }
 
 export async function saveCurrentWorkout(value: WorkoutCurrent) {
   if (!value) return;
 
-  await SecureStore.setItemAsync("currentWorkout", JSON.stringify(value));
+  storage.set('currentWorkout', JSON.stringify(value));
 }
 
 export async function saveCurrentExercises(value: WorkoutExerciseCurrent[]) {
   if (!value) return;
 
-  await SecureStore.setItemAsync("currentExercises", JSON.stringify(value));
+  storage.set('currentExercises', JSON.stringify(value));
 }
 
 export async function getCurrentWorkout(): Promise<null | WorkoutCurrent> {
-  const fetchStorage = await SecureStore.getItemAsync("currentWorkout");
+  const fetchStorage = storage.getString('currentWorkout');
 
   if (!fetchStorage) return null;
 
@@ -41,7 +42,7 @@ export async function getCurrentWorkout(): Promise<null | WorkoutCurrent> {
 export async function getCurrentExercises(): Promise<
   null | WorkoutExerciseCurrent[]
 > {
-  const fetchStorage = await SecureStore.getItemAsync("currentExercises");
+  const fetchStorage = storage.getString('currentExercises');
 
   if (!fetchStorage) return null;
 
@@ -51,11 +52,11 @@ export async function getCurrentExercises(): Promise<
 export async function saveWorkoutHistory(value: WorkoutHistory[]) {
   if (!value) return;
 
-  await SecureStore.setItemAsync("workoutHistory", JSON.stringify(value));
+  storage.set('workoutHistory', JSON.stringify(value));
 }
 
 export async function getAuth(): Promise<null | AuthState> {
-  const fetchStorage = await SecureStore.getItemAsync("auth");
+  const fetchStorage = await SecureStore.getItemAsync('auth');
 
   if (!fetchStorage) return null;
 
@@ -63,5 +64,5 @@ export async function getAuth(): Promise<null | AuthState> {
 }
 
 export async function saveAuth(data: AuthState) {
-  await SecureStore.setItemAsync("auth", JSON.stringify(data));
+  await SecureStore.setItemAsync('auth', JSON.stringify(data));
 }

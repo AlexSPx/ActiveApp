@@ -41,7 +41,7 @@ export const currentExercisesAtom = atom<WorkoutExerciseCurrent[]>({
   default: [],
   effects: [
     ({ onSet }) => {
-      onSet(async (newValue, oldValue) => {
+      onSet(async (newValue, _oldValue) => {
         await saveCurrentExercises(newValue);
       });
     },

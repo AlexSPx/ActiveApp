@@ -3,46 +3,38 @@ import { FlatList, View } from 'react-native';
 import { FAB, Text } from 'react-native-paper';
 import { WorkoutHistory } from '../../services/WorkoutService';
 import { lineDataItem } from 'react-native-gifted-charts';
-import ExerciseWidget, {
-  ExerciseWidgetType,
-  ExerciseWidgetProps,
-} from './ExerciseWidget';
+import ExerciseWidget from './ExerciseWidget';
 import CreateWidgetMenu from './CreateWidgetMenu';
-import { storage } from '../../stores/storage';
+import {
+  ExerciseWidgetProps,
+  ExerciseWidgetType,
+  widgetsState,
+} from '../../states/Widgets';
+import { useRecoilState } from 'recoil';
 
 export default function Widgets({ history }: { history: WorkoutHistory[] }) {
-  const [widgets, setWidgets] = useState<ExerciseWidgetProps[]>([]);
-  const [refresh, setRefresh] = useState(0);
-
   const [createWidgetVisibility, setCreateWidgetVisibility] = useState(false);
-
-  useEffect(() => {
-    const keys = storage.getString('widgets') || '';
-
-    const widgetsBuild: ExerciseWidgetProps[] = [];
-    (JSON.parse(keys) as string[]).forEach((key) => {
-      const widget = storage.getString(key);
-      if (!widget) return;
-      widgetsBuild.push(JSON.parse(widget));
-    });
-
-    setWidgets(widgetsBuild);
-    setRefresh((old) => old++);
-  }, []);
+  const [widgets, setWidgets] = useRecoilState(widgetsState);
+  const [widgetsWithData, setWidgetsWithData] = useState<ExerciseWidgetProps[]>(
+    [],
+  );
 
   useEffect(() => {
     const data = extractData(history, widgets);
-
-    setWidgets((old) =>
-      old.map((widget) => ({
+    setWidgetsWithData(
+      widgets.map((widget) => ({
         ...widget,
-        data: data.get(getKey(widget)) || [],
+        data: data.get(widget.key) || [],
       })),
     );
-  }, [history, refresh]);
+  }, [history, widgets]);
 
   return (
-    <View>
+    <View
+      style={{
+        flex: 1,
+      }}
+    >
       <CreateWidgetMenu
         visible={createWidgetVisibility}
         setVisible={(visibility: boolean) =>
@@ -66,9 +58,10 @@ export default function Widgets({ history }: { history: WorkoutHistory[] }) {
           onPress={() => setCreateWidgetVisibility(true)}
         />
       </View>
-      {widgets && (
+      {widgetsWithData && (
         <FlatList
-          data={widgets}
+          data={widgetsWithData}
+          scrollEnabled
           renderItem={({ item }) => {
             return (
               <View>
@@ -88,7 +81,7 @@ const extractData = (
 ): Map<string, lineDataItem[]> => {
   const data: Map<string, lineDataItem[]> = new Map();
 
-  widgets.forEach((widget) => data.set(getKey(widget), []));
+  widgets.forEach((widget) => data.set(widget.key, []));
 
   history.forEach((record) => {
     record.exercises.forEach((exercise) => {
@@ -98,8 +91,6 @@ const extractData = (
       const volumeData = data.get(
         exercise.exerciseId + ExerciseWidgetType.VOLUME,
       );
-
-      console.log(exercise);
 
       if (ormData || volumeData) {
         for (let i = 0; i < exercise.reps.length; i++) {
@@ -116,8 +107,4 @@ const extractData = (
   });
 
   return data;
-};
-
-const getKey = (widget: ExerciseWidgetProps): string => {
-  return widget.id + widget.type;
 };

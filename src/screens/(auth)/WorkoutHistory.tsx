@@ -77,8 +77,6 @@ export default function WorkoutHistory({
       }
     });
 
-    console.log(monthMap);
-
     setOrderedRecords(monthMap);
 
     setRefreshing(false);

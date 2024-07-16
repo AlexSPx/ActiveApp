@@ -20,7 +20,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { decode, encode } from 'base-64';
 import { GoogleProvider } from './src/states/GoogleProvider';
-import useWorkoutService from './src/services/WorkoutService';
 import { NavigationContainer } from '@react-navigation/native';
 
 if (!global.btoa) {
@@ -44,6 +43,9 @@ const DarkTheme = {
   ...DefaultDarkTheme,
   colors: AppTheme.dark.colors,
 };
+
+if (__DEV__) {
+}
 
 const layout = () => {
   const [fontsLoaded] = useFonts({

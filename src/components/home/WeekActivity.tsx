@@ -27,8 +27,6 @@ export const WeekActivities = ({ colors, history }: WeekActivitiesProps) => {
     scrollRef.current?.scrollToIndex({ index: currentDay, animated: true });
   }, [scrollRef, currentDay]);
 
-  console.log(goals);
-
   return (
     <FlatList
       data={goals}
