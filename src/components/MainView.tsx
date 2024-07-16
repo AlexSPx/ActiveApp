@@ -1,6 +1,6 @@
-import React from "react";
-import { MD3Colors } from "react-native-paper/lib/typescript/src/types";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React from 'react';
+import { MD3Colors } from 'react-native-paper/lib/typescript/types';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type MainViewProps = {
   colors: MD3Colors;
@@ -23,7 +23,7 @@ export default function MainView({
       style={{
         flex: 1,
         backgroundColor: colors.background,
-        alignItems: alignCenter ? "center" : "stretch",
+        alignItems: alignCenter ? 'center' : 'stretch',
         paddingHorizontal,
         marginTop: marginTop,
       }}

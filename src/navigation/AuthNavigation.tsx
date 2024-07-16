@@ -1,17 +1,18 @@
-import { createStackNavigator } from "@react-navigation/stack";
-import CreateWorkout from "../screens/(auth)/CreateWorkout";
-import WorkoutPreview from "../screens/(auth)/WorkoutPreview";
-import ExerciseSearchNavigation from "./ExerciseSearchNavigation";
-import { WorkoutHistory, WorkoutRecordWE } from "../services/WorkoutService";
-import AuthNavigation from "./TabsNavigation";
-import RunningWorkout from "../screens/(auth)/RunningWorkout";
-import WorkoutHistoryView from "../screens/(auth)/WorkoutHistoryView";
+import { createStackNavigator } from '@react-navigation/stack';
+import CreateWorkout from '../screens/(auth)/CreateWorkout';
+import WorkoutPreview from '../screens/(auth)/WorkoutPreview';
+import ExerciseSearchNavigation from './ExerciseSearchNavigation';
+import { WorkoutHistory, WorkoutRecordWE } from '../services/WorkoutService';
+import AuthNavigation from './TabsNavigation';
+import RunningWorkout from '../screens/(auth)/RunningWorkout';
+import WorkoutHistoryView from '../screens/(auth)/WorkoutHistoryView';
+import { Exercise } from '../components/exercise_search/ExerciseCard';
 
 export type AuthStackProps = {
   tabs: undefined;
   exerciseSearch: undefined;
   createWorkout: undefined;
-  searchExercise: undefined;
+  searchExercise: { onSelectExercise: (e: Exercise) => void };
   workoutPreview: { workout: WorkoutRecordWE | undefined };
   runningWorkout: undefined;
   workoutHistoryView: { workout: WorkoutHistory | undefined };
@@ -27,12 +28,6 @@ export default function AuthNavigationStack() {
       }}
     >
       <AuthStack.Screen name="tabs" component={AuthNavigation} />
-
-      <AuthStack.Screen
-        name="exerciseSearch"
-        component={ExerciseSearchNavigation}
-      />
-
       <AuthStack.Screen name="createWorkout" component={CreateWorkout} />
 
       <AuthStack.Screen

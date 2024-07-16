@@ -4,16 +4,16 @@ import React, {
   useState,
   ReactNode,
   useEffect,
-} from "react";
-import { getSettings, saveSettings } from "../utils/secureStore";
+} from 'react';
+import { getSettings, saveSettings } from '../stores/secureStore';
 
 export type Settings = {
-  theme: "default-light" | "default-dark" | "default-system" | "colors-system";
+  theme: 'default-light' | 'default-dark' | 'default-system' | 'colors-system';
   notifications: boolean;
 };
 
 const defaultSettings: Settings = {
-  theme: "default-light",
+  theme: 'default-light',
   notifications: true,
 };
 
@@ -51,7 +51,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 export function useSettings() {
   const context = useContext(SettingsContext);
   if (!context) {
-    throw new Error("useSettings must be used within a SettingsProvider");
+    throw new Error('useSettings must be used within a SettingsProvider');
   }
   return context;
 }

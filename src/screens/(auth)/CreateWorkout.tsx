@@ -1,22 +1,25 @@
-import React from "react";
-import { Button, TextInput, useTheme } from "react-native-paper";
-import MainView from "../../components/MainView";
-import { FlatList, SafeAreaView, View } from "react-native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import Exercise from "../../components/create_workout/Exercise";
-import { useRecoilState } from "recoil";
+import React from 'react';
+import { Button, TextInput, useTheme } from 'react-native-paper';
+import MainView from '../../components/MainView';
+import { FlatList, SafeAreaView, View } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import Exercise from '../../components/create_workout/Exercise';
+import { useRecoilState } from 'recoil';
 import {
   createExercisesAtom,
   createWorkoutAtom,
-} from "../../states/CreateWorkoutState";
-import useExerciseService from "../../services/ExerciseService";
-import useWorkoutService from "../../services/WorkoutService";
-import { showError, showMessage } from "../../services/utils";
-import useServiceCall from "../../utils/useServiceCall";
+} from '../../states/CreateWorkoutState';
+import useExerciseService from '../../services/ExerciseService';
+import useWorkoutService from '../../services/WorkoutService';
+import { showError, showMessage } from '../../services/utils';
+import useServiceCall from '../../utils/useServiceCall';
+import { AuthStackProps } from '../../navigation/AuthNavigation';
+import { addExercise } from '../../utils/exerciseHelpers';
+import InvokeSearch from '../../components/search_exercise/InvokeSearch';
 
 export default function CreateWorkout({
   navigation,
-}: NativeStackScreenProps<any>) {
+}: NativeStackScreenProps<AuthStackProps>) {
   const { colors } = useTheme();
 
   const { createRecords } = useExerciseService();
@@ -29,7 +32,7 @@ export default function CreateWorkout({
 
   const cancelCreating = () => {
     setExercises([]);
-    setTitle("Workout");
+    setTitle('Workout');
   };
 
   const handleCreateWorkout = async () => {
@@ -68,16 +71,19 @@ export default function CreateWorkout({
           )}
           ListFooterComponent={() => (
             <View>
-              <Button
+              <InvokeSearch
                 mode="contained-tonal"
+                label="Add Exercise"
                 style={{
                   borderRadius: 10,
                   marginTop: 15,
                 }}
-                onPress={() => navigation.navigate("exerciseSearch")}
-              >
-                Add Exercise
-              </Button>
+                onSelect={(exercise) => {
+                  setExercises((prev) =>
+                    addExercise(prev, exercise.id, exercise.title),
+                  );
+                }}
+              />
 
               <View style={{ marginTop: 12 }}>
                 <Button

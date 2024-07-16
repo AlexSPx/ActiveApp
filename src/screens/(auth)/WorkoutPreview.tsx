@@ -1,18 +1,18 @@
-import React from "react";
-import { Button, useTheme, Text } from "react-native-paper";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import React from 'react';
+import { Button, useTheme, Text } from 'react-native-paper';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   currentExercisesAtom,
   currentWorkoutAtom,
   isWorkoutRunningSelector,
-} from "../../states/RunnigWorkoutState";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import useConfirmationDialog from "../../components/modals/ConfirmationDialog";
-import MainView from "../../components/MainView";
-import { ScrollView } from "react-native";
-import { AuthStackProps } from "../../navigation/AuthNavigation";
+} from '../../states/RunnigWorkoutState';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import useConfirmationDialog from '../../components/modals/ConfirmationDialog';
+import MainView from '../../components/MainView';
+import { ScrollView } from 'react-native';
+import { AuthStackProps } from '../../navigation/AuthNavigation';
 
-type Props = NativeStackScreenProps<AuthStackProps, "workoutPreview">;
+type Props = NativeStackScreenProps<AuthStackProps, 'workoutPreview'>;
 
 export default function WorkoutPreview({ route, navigation }: Props) {
   const { workout } = route.params;
@@ -31,20 +31,20 @@ export default function WorkoutPreview({ route, navigation }: Props) {
     }));
 
     setExercises(() => [
-      ...workout.structure.map((exercise) => {
+      ...workout.structure.map((exerciseStruct) => {
         return {
-          exerciseId: exercise.id,
-          title: exercise.exerciseName,
-          sets: exercise.reps.map((reps, idx) => ({
+          exerciseId: exerciseStruct.exerciseId,
+          title: exerciseStruct.exerciseName,
+          sets: exerciseStruct.reps.map((reps, idx) => ({
             reps: reps.toString(),
-            weight: exercise.weight[idx].toString(),
+            weight: exerciseStruct.weight[idx].toString(),
             finished: false,
           })),
         };
       }),
     ]);
 
-    navigation.navigate("runningWorkout");
+    navigation.navigate('runningWorkout');
   };
 
   const [ConfirmationDialog, showDialog] = useConfirmationDialog(setWorkout);
@@ -52,7 +52,7 @@ export default function WorkoutPreview({ route, navigation }: Props) {
   const handleStartWorkout = () => {
     if (isWorkoutRunning)
       showDialog(
-        "There is a workout currently running, do you wish to continue?"
+        'There is a workout currently running, do you wish to continue?',
       );
     else setWorkout();
   };

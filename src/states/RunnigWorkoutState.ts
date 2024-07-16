@@ -1,5 +1,8 @@
-import { atom, selector, useSetRecoilState } from "recoil";
-import { saveCurrentExercises, saveCurrentWorkout } from "../utils/secureStore";
+import { atom, selector, useSetRecoilState } from 'recoil';
+import {
+  saveCurrentExercises,
+  saveCurrentWorkout,
+} from '../stores/secureStore';
 
 interface WorkoutCurrent {
   title: string;
@@ -21,8 +24,8 @@ type WorkoutExerciseCurrent = {
 export { WorkoutExerciseCurrent, ExerciseSet, WorkoutCurrent };
 
 export const currentWorkoutAtom = atom<WorkoutCurrent>({
-  key: "currentWorkout",
-  default: { title: "", workoutId: "" },
+  key: 'currentWorkout',
+  default: { title: '', workoutId: '' },
   effects: [
     ({ onSet }) => {
       onSet(async (newValue) => {
@@ -33,7 +36,7 @@ export const currentWorkoutAtom = atom<WorkoutCurrent>({
 });
 
 export const currentExercisesAtom = atom<WorkoutExerciseCurrent[]>({
-  key: "currentExercises",
+  key: 'currentExercises',
 
   default: [],
   effects: [
@@ -46,7 +49,7 @@ export const currentExercisesAtom = atom<WorkoutExerciseCurrent[]>({
 });
 
 export const isWorkoutRunningSelector = selector({
-  key: "isWorkoutRunningSelector",
+  key: 'isWorkoutRunningSelector',
   get: ({ get }) => {
     const exercises = get(currentExercisesAtom);
 
@@ -55,7 +58,7 @@ export const isWorkoutRunningSelector = selector({
 });
 
 export const checkFinishedSelector = selector({
-  key: "checkFinishedSelector",
+  key: 'checkFinishedSelector',
   get: ({ get }) => {
     const exercises = get(currentExercisesAtom);
 
@@ -73,7 +76,7 @@ export const useResetRunningWorkout = () => {
   const setExercises = useSetRecoilState(currentExercisesAtom);
 
   return function reset() {
-    setDetails({ title: "", workoutId: "" });
+    setDetails({ title: '', workoutId: '' });
     setExercises([]);
   };
 };

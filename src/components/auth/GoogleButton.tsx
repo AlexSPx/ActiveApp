@@ -1,9 +1,9 @@
-import { Button, ButtonProps } from "react-native-paper";
+import { Button, ButtonProps } from 'react-native-paper';
 import {
   GoogleSignin,
   statusCodes,
-} from "@react-native-google-signin/google-signin";
-import { ReactNode } from "react";
+} from '@react-native-google-signin/google-signin';
+import { ReactNode } from 'react';
 
 type GoogleButtonProps = {
   onSuccess: (token: string) => void;
@@ -39,10 +39,10 @@ export default function GoogleButton({
     <Button
       mode="outlined"
       style={{
-        width: "100%",
+        width: '100%',
         marginTop: 16,
         height: 45,
-        justifyContent: "center",
+        justifyContent: 'center',
       }}
       loading={loading}
       onPress={handleClick}
