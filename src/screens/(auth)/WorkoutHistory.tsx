@@ -54,7 +54,7 @@ export default function WorkoutHistory({
     };
 
     history?.forEach((record) => {
-      const date = new Date(record.finishedAt);
+      const date = new Date(record.createdAt);
 
       const dateSplit = Intl.DateTimeFormat('en-US', formatOptions)
         .format(date)
@@ -123,7 +123,7 @@ export default function WorkoutHistory({
                     <FlatList
                       data={orderedRecords.get(year)!.get(month)}
                       keyExtractor={(item, index) =>
-                        item.finishedAt.toString() + index
+                        item.id + index
                       }
                       renderItem={({ item }) => (
                         <HistoryCard

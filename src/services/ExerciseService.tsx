@@ -7,11 +7,9 @@ import { handleError } from "../api/utils";
 
 export interface ExerciseRecord {
   id: string;
-  exerciseId: string;
-  exerciseName: string;
-  reps: number[];
-  weight: number[];
-  timeBased: boolean;
+  exercise: Exercise;
+  repetitions: number[];
+  weights: number[];
 }
 
 export default function useExerciseService() {
@@ -29,15 +27,20 @@ export default function useExerciseService() {
       const response = await axios.get<Exercise[]>(`/exercise/search`, {
         params: {
           title: query.name,
-          type: formatTag(query.tags.exercisetype),
-          bodyPart: formatTag(query.tags.bodypart),
-          level: formatTag(query.tags.level),
-          page: 0,
+          // type: formatTag(query.tags.exercisetype),
+          // bodyPart: formatTag(query.tags.bodypart),
+          // level: formatTag(query.tags.level),
+          // page: 0,
         },
       });
 
+      console.log(response.data);
+      
+
       return response.data;
     } catch (error) {
+      console.log(error);
+      
       return null;
     }
   };

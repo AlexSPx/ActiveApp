@@ -86,7 +86,7 @@ export default function SearchExercise({
       )}
       <FlatList
         data={exercises}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
         onEndReached={fetchMoreResults}
         // ListFooterComponent={() =>
         //   isLoading ? <ActivityIndicator animating={true} /> : null

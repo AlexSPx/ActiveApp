@@ -37,11 +37,9 @@ export default function CreateWorkout({
 
   const handleCreateWorkout = async () => {
     executeService(async () => {
-      const exerciseIds = await createRecords(exercises);
-
       await createWorkout({
         title,
-        workoutStructureRecords: exerciseIds,
+        exercises,
       });
     });
 
