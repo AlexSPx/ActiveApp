@@ -52,7 +52,7 @@ export default function Footer({
       }, exercises);
     });
 
-    // handleResetWorkout();
+    handleResetWorkout();
   };
 
   return (

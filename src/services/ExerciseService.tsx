@@ -32,10 +32,7 @@ export default function useExerciseService() {
           // level: formatTag(query.tags.level),
           // page: 0,
         },
-      });
-
-      console.log(response.data);
-      
+      });      
 
       return response.data;
     } catch (error) {

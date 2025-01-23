@@ -111,17 +111,9 @@ export default function useWorkoutService() {
           weights: exercise.sets.map(set => set.weight),
           repetitions: exercise.sets.map(set => set.reps) 
         })
-      })
+      })      
 
-      console.log(requestPayload);
-      
-
-      const response = await axios.post<string>('/workout', requestPayload);
-
-      console.log(response.statusText);
-      
-      console.log(response.data);
-      
+      const response = await axios.post<string>('/workout', requestPayload); 
 
       return response.data;
     } catch (error) {
@@ -160,14 +152,9 @@ export default function useWorkoutService() {
   };
 
   const getWorkoutHistory = async () => {
-    try {
-      console.log('here');
-    
+    try {    
       const records =
-        await axios.get<WorkoutHistory[]>('/workout/record');
-
-      console.log(records.data);
-      
+        await axios.get<WorkoutHistory[]>('/workout/record');      
 
       return records.data;
     } catch (error) {

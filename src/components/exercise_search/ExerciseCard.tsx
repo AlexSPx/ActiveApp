@@ -102,9 +102,7 @@ export default function ExerciseCard({
   exercise: Exercise;
   colors: MD3Colors;
   func: (exercise: Exercise) => void;
-}) {
-  console.log(exercise);
-  
+}) {  
   return (
     <Button
       mode="outlined"

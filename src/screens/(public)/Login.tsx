@@ -4,7 +4,6 @@ import { Button, useTheme } from "react-native-paper";
 import LoginHeadline from "../../components/auth/LoginHeadline";
 import { AuthInputComponent } from "../../components/auth/AuthInputComponent";
 import { View } from "react-native";
-import GoogleButton from "../../components/auth/GoogleButton";
 import useAuthService from "../../services/AuthService";
 import useServiceCall from "../../utils/useServiceCall";
 
@@ -80,14 +79,6 @@ export default function Login() {
             paddingVertical: 32,
           }}
         >
-          <GoogleButton
-            onSuccess={(token) => {
-              loginGoogle(token);
-            }}
-            style={{ width: "85%" }}
-          >
-            Sign in with Google
-          </GoogleButton>
         </View>
       </View>
     </MainView>

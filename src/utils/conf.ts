@@ -1,0 +1,1 @@
+export const API_ADDRESS = process.env.EXPO_PUBLIC_API_URL + "/api";

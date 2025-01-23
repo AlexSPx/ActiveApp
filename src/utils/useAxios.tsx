@@ -24,6 +24,7 @@ export default function useAxios() {
     setAuth((prev) => ({
       ...prev,
       token: newToken.data.token,
+      refresh: newToken.data.refreshToken,
     }));
 
     req.headers.Authorization = newToken.data.token;
