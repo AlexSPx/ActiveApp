@@ -46,13 +46,10 @@ export default function Footer({
     }
 
     executeService(async () => {
-      const ids = await createRecords(exercises);
       await createRecord({
         workoutId: workout.workoutId,
-        workoutTitle: workout.title,
-        exerciseRecordIds: ids,
         duration: 0,
-      });
+      }, exercises);
     });
 
     handleResetWorkout();

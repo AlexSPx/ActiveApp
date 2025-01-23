@@ -31,13 +31,13 @@ export default function WorkoutPreview({ route, navigation }: Props) {
     }));
 
     setExercises(() => [
-      ...workout.structure.map((exerciseStruct) => {
+      ...workout.workoutTemplate.templateExercises.map((exerciseTemplate) => {
         return {
-          exerciseId: exerciseStruct.exerciseId,
-          title: exerciseStruct.exerciseName,
-          sets: exerciseStruct.reps.map((reps, idx) => ({
+          exerciseId: exerciseTemplate.exercise.id,
+          title: exerciseTemplate.exercise.title,
+          sets: exerciseTemplate.repetitions!.map((reps, idx) => ({
             reps: reps.toString(),
-            weight: exerciseStruct.weight[idx].toString(),
+            weight: exerciseTemplate.weights![idx].toString(),
             finished: false,
           })),
         };
@@ -64,13 +64,13 @@ export default function WorkoutPreview({ route, navigation }: Props) {
         {workout.title}
       </Text>
       <ScrollView>
-        {workout.structure.map((exercise) => (
+        {workout.workoutTemplate.templateExercises.map((exerciseTemplate) => (
           <Text
-            key={exercise.id}
+            key={exerciseTemplate.id}
             variant="labelLarge"
             style={{ marginVertical: 4 }}
           >
-            {exercise.weight.length} x {exercise.exerciseName}
+            {exerciseTemplate.weights?.length} x {exerciseTemplate.exercise.title}
           </Text>
         ))}
       </ScrollView>

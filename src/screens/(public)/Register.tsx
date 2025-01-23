@@ -6,7 +6,6 @@ import RegisterHeadline from "../../components/auth/RegisterHeadline";
 import { AuthInputComponent } from "../../components/auth/AuthInputComponent";
 import useAuthService from "../../services/AuthService";
 import useServiceCall from "../../utils/useServiceCall";
-import GoogleButton from "../../components/auth/GoogleButton";
 
 export default function Register() {
   const { colors } = useTheme();
@@ -106,13 +105,7 @@ export default function Register() {
           Register
         </Button>
       </View>
-      <GoogleButton
-        style={{ width: "85%" }}
-        loading={loading}
-        onSuccess={handleGoogleRegister}
-      >
-        Register with Google
-      </GoogleButton>
+
     </MainView>
   );
 }

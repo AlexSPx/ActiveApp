@@ -19,7 +19,6 @@ import Navigation from './src/navigation';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { decode, encode } from 'base-64';
-import { GoogleProvider } from './src/states/GoogleProvider';
 import { NavigationContainer } from '@react-navigation/native';
 
 if (!global.btoa) {
@@ -64,7 +63,6 @@ const layout = () => {
             <CacheRetriever
               hideSplash={async () => await SplashScreen.hideAsync()}
             >
-              <GoogleProvider>
                 <SafeAreaProvider>
                   <SettingsProvider>
                     <ColorsSchemeProvider>
@@ -72,7 +70,6 @@ const layout = () => {
                     </ColorsSchemeProvider>
                   </SettingsProvider>
                 </SafeAreaProvider>
-              </GoogleProvider>
             </CacheRetriever>
           </RecoilRoot>
         </QueryClientProvider>

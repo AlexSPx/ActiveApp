@@ -19,17 +19,17 @@ export default function WorkoutHistory({ navigation, route }: Props) {
       <Text variant="displaySmall" style={{ marginTop: 0 }}>
         {workout.workoutTitle}
       </Text>
-      <Text>Complited {formatDateToDdMmYyyy(workout.finishedAt)}</Text>
+      <Text>Complited {formatDateToDdMmYyyy(workout.createdAt)}</Text>
 
       <FlatList
-        data={workout.exercises}
-        keyExtractor={(item) => item.exerciseId}
+        data={workout.exerciseRecords}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View key={item.id} style={{ marginVertical: 6 }}>
-            <Text variant="headlineSmall">{item.exerciseName}</Text>
-            {item.weight.map((wg, index) => (
+            <Text variant="headlineSmall">{item.exercise.title}</Text>
+            {item.weights.map((wg, index) => (
               <Text variant="labelLarge" key={index}>
-                {wg}kgs x {item.reps[index]}
+                {wg}kgs x {item.repetitions[index]}
               </Text>
             ))}
           </View>

@@ -17,7 +17,7 @@ export default function Workouts({ navigation }: NativeStackScreenProps<any>) {
     data: workouts,
     loading,
     refresh,
-  } = useQuery<WorkoutRecordWE[]>({
+  } = useQuery<Workout[]>({
     serviceCall: () => getWorkouts(),
   });
 

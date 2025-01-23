@@ -11,6 +11,7 @@ import { workoutHistory } from './WorkoutHistory';
 import useWorkoutService from '../services/WorkoutService';
 import { storage } from '../stores/storage';
 import { widgetsState } from './Widgets';
+import React from 'react';
 
 export default function CacheRetriever({
   children,

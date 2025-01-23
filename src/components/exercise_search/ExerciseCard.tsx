@@ -5,63 +5,93 @@ import { MD3Colors } from 'react-native-paper/lib/typescript/types';
 export interface Exercise {
   id: string;
   title: string;
-  description: string;
   exerciseType: ExerciseType;
-  bodyPart: BodyPart;
   equipment: Equipment;
   level: Level;
+  force?: Force; // Optional since nullable in Java
+  mechanic?: Mechanic; // Optional since nullable in Java
+  primaryMuscles: Muscle[]; // List of primary muscles
+  secondaryMuscles: Muscle[]; // List of secondary muscles
+  instructions: string[]; // List of instructions
+  category: Category; // Category field from Java entity
 }
 
-enum ExerciseType {
-  Strength = 'Strength',
-  Plyometrics = 'Plyometrics',
-  Cardio = 'Cardio',
-  Stretching = 'Stretching',
-  Powerlifting = 'Powerlifting',
-  Strongman = 'Strongman',
-  OlympicWeightlifting = 'Olympic Weightlifting',
+export enum ExerciseType {
+  Strength = 'strength',
+  Plyometrics = 'plyometrics',
+  Cardio = 'cardio',
+  Stretching = 'stretching',
+  Powerlifting = 'powerlifting',
+  Strongman = 'strongman',
+  OlympicWeightlifting = 'olympic weightlifting',
+  Other = 'other',
 }
 
-enum BodyPart {
-  Abdominals = 'Abdominals',
-  Adductors = 'Adductors',
-  Abductors = 'Abductors',
-  Biceps = 'Biceps',
-  Calves = 'Calves',
-  Chest = 'Chest',
-  Forearms = 'Forearms',
-  Glutes = 'Glutes',
-  Hamstrings = 'Hamstrings',
-  Lats = 'Lats',
-  LowerBack = 'Lower Back',
-  MiddleBack = 'Middle Back',
-  Traps = 'Traps',
-  Neck = 'Neck',
-  Quadriceps = 'Quadriceps',
-  Shoulders = 'Shoulders',
-  Triceps = 'Triceps',
+export enum Equipment {
+  Barbell = 'barbell',
+  Dumbbell = 'dumbbell',
+  Kettlebells = 'kettlebells',
+  Machine = 'machine',
+  Cable = 'cable',
+  BodyOnly = 'body only',
+  Bands = 'bands',
+  MedicineBall = 'medicine ball',
+  Bench = 'bench',
+  FoamRoll = 'foam roll',
+  ExerciseBall = 'exercise ball',
+  EZCurlBar = 'e-z curl bar',
+  Other = 'other',
 }
 
-enum Equipment {
-  Bands = 'Bands',
-  Barbell = 'Barbell',
-  Kettlebells = 'Kettlebells',
-  Dumbbell = 'Dumbbell',
-  Other = 'Other',
-  Cable = 'Cable',
-  Machine = 'Machine',
-  BodyOnly = 'Body Only',
-  MedicineBall = 'Medicine Ball',
-  ExerciseBall = 'Exercise Ball',
-  FoamRoll = 'Foam Roll',
-  EZCurlBar = 'EZ Curl Bar',
-  None = 'None',
+export enum Force {
+  Static = 'static',
+  Pull = 'pull',
+  Push = 'push',
+  Other = 'other',
 }
 
-enum Level {
-  Intermediate = 'Intermediate',
-  Beginner = 'Beginner',
-  Expert = 'Expert',
+export enum Level {
+  Beginner = 'beginner',
+  Intermediate = 'intermediate',
+  Expert = 'expert',
+  None = 'none',
+}
+
+export enum Muscle {
+  Abdominals = 'abdominals',
+  Abductors = 'abductors',
+  Adductors = 'adductors',
+  Biceps = 'biceps',
+  Calves = 'calves',
+  Chest = 'chest',
+  Forearms = 'forearms',
+  Glutes = 'glutes',
+  Hamstrings = 'hamstrings',
+  Lats = 'lats',
+  LowerBack = 'lower back',
+  MiddleBack = 'middle back',
+  Neck = 'neck',
+  Quadriceps = 'quadriceps',
+  Shoulders = 'shoulders',
+  Traps = 'traps',
+  Triceps = 'triceps',
+  Other = 'other',
+}
+
+export enum Mechanic {
+  Compound = 'compound',
+  Isolation = 'isolation',
+}
+
+export enum Category {
+  Powerlifting = 'powerlifting',
+  Strength = 'strength',
+  Stretching = 'stretching',
+  Cardio = 'cardio',
+  OlympicWeightlifting = 'olympic weightlifting',
+  Strongman = 'strongman',
+  Plyometrics = 'plyometrics',
+  Other = 'other',
 }
 
 export default function ExerciseCard({
@@ -72,7 +102,7 @@ export default function ExerciseCard({
   exercise: Exercise;
   colors: MD3Colors;
   func: (exercise: Exercise) => void;
-}) {
+}) {  
   return (
     <Button
       mode="outlined"

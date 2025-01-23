@@ -99,7 +99,7 @@ function binarySearchByFinishedAt(
 
   while (left <= right) {
     const mid = Math.floor((left + right) / 2);
-    const midDate = array[mid].finishedAt;
+    const midDate = array[mid].createdAt;
 
     const comparison = compareDates(midDate, targetDate);
 

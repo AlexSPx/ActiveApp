@@ -17,7 +17,7 @@ export const HistoryCard = ({
 
   return (
     <Card
-      key={record.finishedAt.toString()}
+      key={record.id}
       mode="contained"
       style={{
         backgroundColor: colors.secondaryContainer,
@@ -43,21 +43,21 @@ export const HistoryCard = ({
           <Text>Best Set</Text>
         </View>
 
-        {record.exercises.map((exercise) => {
-          const bestSet = getBestSet(exercise.weight, exercise.reps);
+        {record.exerciseRecords.map((exerciseRecord) => {
+          const bestSet = getBestSet(exerciseRecord.weights, exerciseRecord.repetitions);
           return (
             <View
-              key={exercise.id}
+              key={exerciseRecord.id}
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
               }}
             >
               <Text>
-                {exercise.weight.length} x {exercise.exerciseName}
+                {exerciseRecord.weights.length} x {exerciseRecord.exercise.title}
               </Text>
               <Text>
-                {exercise.weight[bestSet]} x {exercise.reps[bestSet]}
+                {exerciseRecord.weights[bestSet]} x {exerciseRecord.repetitions[bestSet]}
               </Text>
             </View>
           );

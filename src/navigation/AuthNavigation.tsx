@@ -2,7 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import CreateWorkout from '../screens/(auth)/CreateWorkout';
 import WorkoutPreview from '../screens/(auth)/WorkoutPreview';
 import ExerciseSearchNavigation from './ExerciseSearchNavigation';
-import { WorkoutHistory, WorkoutRecordWE } from '../services/WorkoutService';
+import { Workout, WorkoutHistory } from '../services/WorkoutService';
 import AuthNavigation from './TabsNavigation';
 import RunningWorkout from '../screens/(auth)/RunningWorkout';
 import WorkoutHistoryView from '../screens/(auth)/WorkoutHistoryView';
@@ -13,7 +13,7 @@ export type AuthStackProps = {
   exerciseSearch: undefined;
   createWorkout: undefined;
   searchExercise: { onSelectExercise: (e: Exercise) => void };
-  workoutPreview: { workout: WorkoutRecordWE | undefined };
+  workoutPreview: { workout: Workout | undefined };
   runningWorkout: undefined;
   workoutHistoryView: { workout: WorkoutHistory | undefined };
 };

@@ -63,6 +63,7 @@ export default function ExerciseWidget({
           xAxisLabelTextStyle={{
             color: colors.onSurface,
           }}
+          width={350}
           adjustToWidth
           data={widget.data}
         />

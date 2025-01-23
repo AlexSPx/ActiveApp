@@ -3,15 +3,21 @@ import useAuthService from './AuthService';
 import { handleError } from '../api/utils';
 import useAxios from '../utils/useAxios';
 import useExerciseService, { ExerciseRecord } from './ExerciseService';
+import { WorkoutExerciseCreate } from '../states/CreateWorkoutState';
+import { Exercise } from '../components/exercise_search/ExerciseCard';
+import { WorkoutExerciseCurrent } from '../states/RunnigWorkoutState';
 
-interface WorkoutResponse {
-  id: string;
-  title: string;
-  workoutStructure: {
-    exerciseRecordIds: string[];
-  };
-  createdBy: string;
-  updatedAt: string;
+export interface WorkoutTemplate {
+  id: string,
+  templateExercises: TemplateExercise[] 
+}
+
+export interface TemplateExercise {
+  id: number;
+  weights?: number[];
+  repetitions?: number[];
+  durations?: number[];
+  exercise: Exercise
 }
 
 interface WorkoutRecordResponse {
@@ -27,6 +33,7 @@ interface WorkoutRecordResponse {
 export interface Workout {
   id: string;
   title: string;
+  workoutTemplate: WorkoutTemplate;
   createdBy: string;
   updatedAt: string;
 }
@@ -42,26 +49,34 @@ export interface WorkoutRecordWE {
 
 export interface WorkoutCreate {
   title: string;
-  workoutStructureRecords: string[];
+  exercises: WorkoutExerciseCreate[];
 }
 
 interface CreateRecordRequest {
   workoutId: string;
-  workoutTitle: string;
   duration: number;
-  exerciseRecordIds: string[];
 }
 
 export interface WorkoutHistory {
-  exercises: ExerciseRecord[];
+  exerciseRecords: ExerciseRecord[];
   id: string;
-  workoutId: string;
   workoutTitle: string;
-  uid: string;
-  duration: number;
-  finishedAt: Date;
+  createdAt: Date;
+  timeToComplete?: number;
+}[];
+
+interface WorkoutRecordRequest {
+  workoutId: string;
+  timeToComplete?: number;
+  exerciseRecords: ExerciseRecordRequest[]
 }
-[];
+
+interface ExerciseRecordRequest {
+  exerciseId: string;
+  weights?: string[];
+  repetitions?: string[];
+  durations?: string[];
+}
 
 export default function useWorkoutService() {
   const [workoutsPage, setWorkoutsPage] = useState(0);
@@ -70,26 +85,13 @@ export default function useWorkoutService() {
 
   const axios = useAxios();
 
-  const getWorkouts = async (): Promise<WorkoutRecordWE[]> => {
+  const getWorkouts = async (): Promise<Workout[]> => {
     try {
-      const response = await axios.get<WorkoutResponse[]>(
+      const response = await axios.get<Workout[]>(
         `/workout?page=${workoutsPage}`,
       );
 
-      const exerciseWithRecords = await Promise.all(
-        response.data.map(async ({ workoutStructure, ...workout }) => {
-          const exercises = await getRecords(
-            workoutStructure.exerciseRecordIds,
-          );
-
-          return {
-            structure: exercises,
-            ...workout,
-          };
-        }),
-      );
-
-      return exerciseWithRecords;
+      return response.data;
     } catch (error) {
       if (error instanceof Object && 'message' in error) throw error;
       throw handleError(error);
@@ -98,7 +100,20 @@ export default function useWorkoutService() {
 
   const createWorkout = async (workout: WorkoutCreate) => {
     try {
-      const response = await axios.post<string>('/workout', workout);
+      const requestPayload: {title: string, templateExerciseStructures: any[]} = {
+        title: workout.title,
+        templateExerciseStructures: []
+      }
+
+      workout.exercises.forEach(exercise => {
+        requestPayload.templateExerciseStructures.push({
+          exerciseId: exercise.exerciseId,
+          weights: exercise.sets.map(set => set.weight),
+          repetitions: exercise.sets.map(set => set.reps) 
+        })
+      })      
+
+      const response = await axios.post<string>('/workout', requestPayload); 
 
       return response.data;
     } catch (error) {
@@ -106,36 +121,42 @@ export default function useWorkoutService() {
     }
   };
 
-  const createRecord = async (recordToCreate: CreateRecordRequest) => {
+  const createRecord = async (workoutRecord: CreateRecordRequest, exerciseRecordLocal: WorkoutExerciseCurrent[]) => {
     try {
-      const response = await axios.post<string>(
+      const recordRequest: WorkoutRecordRequest = {
+        workoutId: workoutRecord.workoutId,
+        exerciseRecords: exerciseRecordLocal.map(record => {
+          const exerciseRecord: ExerciseRecordRequest = {
+            exerciseId: record.exerciseId,
+            repetitions: [],
+            weights: []
+          }
+  
+          record.sets.forEach(set => {
+            exerciseRecord.repetitions!.push(set.reps);
+            exerciseRecord.weights!.push(set.weight);
+          })
+  
+          return exerciseRecord;
+        })
+      }      
+
+      await axios.post<string>(
         '/workout/record',
-        recordToCreate,
+        recordRequest,
       );
 
-      return response.data;
     } catch (error) {
       throw handleError(error);
     }
   };
 
   const getWorkoutHistory = async () => {
-    try {
+    try {    
       const records =
-        await axios.get<WorkoutRecordResponse[]>('/workout/record');
+        await axios.get<WorkoutHistory[]>('/workout/record');      
 
-      const response = await Promise.all(
-        records.data.map(async ({ exerciseRecordIds, ...record }) => {
-          const exercises = await getRecords(exerciseRecordIds);
-
-          return {
-            ...record,
-            exercises: exercises,
-          };
-        }),
-      );
-
-      return response;
+      return records.data;
     } catch (error) {
       throw handleError(error);
     }

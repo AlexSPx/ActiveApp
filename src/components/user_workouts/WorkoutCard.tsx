@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
 import { Card, Menu, Text, useTheme } from "react-native-paper";
-import { WorkoutRecordWE } from "../../services/WorkoutService";
+import { Workout } from "../../services/WorkoutService";
 import { ExerciseSet } from "./ExerciseSet";
 
 type WorkoutCardProps = {
-  workout: WorkoutRecordWE;
+  workout: Workout;
   onPressFunc: () => void;
 };
 
@@ -46,9 +46,9 @@ export const WorkoutCard = ({ workout, onPressFunc }: WorkoutCardProps) => {
         <Card.Title title={workout.title} />
         <Card.Content style={{}}>
           <FlatList
-            data={workout.structure}
-            keyExtractor={(exercise) => exercise.id}
-            renderItem={({ item }) => <ExerciseSet exercise={item} />}
+            data={workout.workoutTemplate.templateExercises}
+            keyExtractor={(exercise) => exercise.id.toString()}
+            renderItem={({ item }) => <ExerciseSet template={item} />}
           />
         </Card.Content>
       </TouchableOpacity>

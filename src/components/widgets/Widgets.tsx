@@ -83,23 +83,23 @@ const extractData = (
 
   widgets.forEach((widget) => data.set(widget.key, []));
 
-  history.forEach((record) => {
-    record.exercises.forEach((exercise) => {
+  history.forEach((workoutRecord) => {
+    workoutRecord.exerciseRecords.forEach((record) => {
       let orm = 0,
         volume = 0;
-      const ormData = data.get(exercise.exerciseId + ExerciseWidgetType.ORM);
+      const ormData = data.get(record.exercise.id + ExerciseWidgetType.ORM);
       const volumeData = data.get(
-        exercise.exerciseId + ExerciseWidgetType.VOLUME,
+        record.exercise.id + ExerciseWidgetType.VOLUME,
       );
 
       if (ormData || volumeData) {
-        for (let i = 0; i < exercise.reps.length; i++) {
-          orm = Math.max(orm, exercise.weight[i]);
-          volume += exercise.weight[i] * exercise.reps[i];
+        for (let i = 0; i < record.weights.length; i++) {
+          orm = Math.max(orm, record.weights[i]);
+          volume += record.weights[i] * record.repetitions[i];
         }
       }
 
-      const label = new Date(record.finishedAt).toDateString();
+      const label = new Date(workoutRecord.createdAt).toDateString();
 
       if (ormData) ormData.push({ value: orm, label });
       if (volumeData) volumeData.push({ value: volume, label });

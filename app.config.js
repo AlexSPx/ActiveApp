@@ -23,7 +23,7 @@ export default {
       backgroundColor: '#ffffff',
     },
     googleServicesFile:
-      process.env.GOOGLE_SERVICECS_DEV || './google-services.json',
+      process.env.GOOGLE_SERVICE_PROD,
     package: IS_DEV ? 'com.alexspx.active.dev' : 'com.alexspx.active',
   },
   web: {
@@ -35,7 +35,6 @@ export default {
     },
   },
   plugins: [
-    '@react-native-google-signin/google-signin',
     'expo-font',
     'expo-secure-store',
   ],

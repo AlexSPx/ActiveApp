@@ -142,6 +142,7 @@ const exerciseSetStyles = StyleSheet.create({
     paddingHorizontal: 2,
     textAlign: "center",
     width: 100,
+    maxWidth: "80%",
     borderRadius: 5,
   },
   finishButton: {
