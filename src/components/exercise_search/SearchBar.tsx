@@ -8,8 +8,8 @@ import React, { useEffect, useState } from "react";
 import EIcon from "react-native-vector-icons/EvilIcons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { MD3Colors } from "react-native-paper/lib/typescript/src/types";
 import { IconButton, TextInput, TouchableRipple } from "react-native-paper";
+import { MD3Colors } from "react-native-paper/lib/typescript/types";
 
 type SearchBarProps = {
   title: string;
@@ -64,6 +64,7 @@ export default function SearchBar({
           paddingHorizontal: 20,
           justifyContent: "center",
           fontSize: 18,
+          marginVertical: 10,
         }}
         theme={{ roundness: 30 }}
         right={

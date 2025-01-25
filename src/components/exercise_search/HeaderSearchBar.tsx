@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTheme } from "react-native-paper";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import {
@@ -14,12 +14,18 @@ export default function HeaderSearchBar() {
 
   const [query, setQuery] = useRecoilState(exerciseSearchQueryAtom);
   const setExercises = useSetRecoilState(exerciseSearchQueryResultsAtom);
+  const [loading, setLoading] = useState(false);
 
   const { searchExercises } = useExerciseService();
 
   const getSearchResults = async () => {
-    const data = await searchExercises();
-    setExercises(data ? data : []);
+    setLoading(true);
+    try{
+      const data = await searchExercises();
+      setExercises(data ? data : []);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -32,7 +38,7 @@ export default function HeaderSearchBar() {
       }}
     >
       <SearchBar
-        loading={false}
+        loading={loading}
         title={query.name}
         colors={colors}
         setTitle={(t) =>
