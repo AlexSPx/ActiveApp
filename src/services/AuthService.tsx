@@ -1,9 +1,9 @@
 import { useRecoilState } from "recoil";
 import { authState } from "../states/authState";
-import { AuthApi, LoginUserRequest, TokenPair } from "../api/auth.api";
+import { AuthApi, LoginUserRequest, TokenPair } from "./api/auth.api";
 import { showError } from "./utils";
-import { handleError } from "../api/utils";
-import useAxios from "../utils/useAxios";
+import { handleError } from "./api/utils";
+import useAuthAxios from "../utils/useAuthAxios";
 
 interface RegisterUserRequest {
   username: string;
@@ -16,7 +16,7 @@ interface RegisterUserRequest {
 
 export default function useAuthService() {
   const [auth, setAuth] = useRecoilState(authState);
-  const axios = useAxios();
+  const axios = useAuthAxios();
 
   const register = async (registerData: RegisterUserRequest) => {
     try {

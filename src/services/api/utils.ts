@@ -22,6 +22,7 @@ export const axiosInstanceAuth = axios.create({
 });
 
 export const handleError = (error: any): ErrorResponse => {
+  console.error(error);
   if (isAxiosError(error) && error.response) {
     if (error.status === HttpStatusCode.ServiceUnavailable) {
       return {

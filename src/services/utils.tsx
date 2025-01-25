@@ -1,5 +1,5 @@
 import { ToastAndroid } from "react-native";
-import { ErrorResponse } from "../api/utils";
+import { ErrorResponse } from "./api/utils";
 
 export const showError = (error: unknown) => {
   console.log(error);

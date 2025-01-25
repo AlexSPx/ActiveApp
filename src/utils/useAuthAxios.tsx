@@ -4,7 +4,7 @@ import axios from 'axios';
 import { API_ADDRESS } from './conf';
 import { jwtDecode } from 'jwt-decode';
 
-export default function useAxios() {
+export default function useAuthAxios() {
   const [auth, setAuth] = useRecoilState(authState);
 
   const axiosInstance = axios.create({
@@ -30,29 +30,6 @@ export default function useAxios() {
     req.headers.Authorization = newToken.data.token;
     return req;
   });
-
-  // axiosInstance.interceptors.request.use(async (req) => {
-  //   if (req.method === 'get') {
-  //     const cachedDataCheck = storageValidation.getBoolean(req.url!);
-  //     if (cachedDataCheck) {
-  //       const cachedData = storage.getString(req.url!)!;
-  //       req.data = JSON.parse(cachedData);
-  //       req.cancelToken = new axios.CancelToken((cancel) => {
-  //         cancel('Request fulfilled from cache');
-  //       });
-  //     }
-  //   }
-
-  //   return req;
-  // });
-
-  // axiosInstance.interceptors.response.use(async (res) => {
-  //   if (res.config.method === 'get' && res.status >= 200 && res.status < 300) {
-  //     storageValidation.set(res.config.url!, true);
-  //     storage.set(res.config.url!, JSON.stringify(res.data));
-  //   }
-  //   return res;
-  // });
 
   return axiosInstance;
 }

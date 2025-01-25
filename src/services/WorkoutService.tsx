@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import useAuthService from './AuthService';
-import { handleError } from '../api/utils';
-import useAxios from '../utils/useAxios';
+import { handleError } from './api/utils';
+import useAuthAxios from '../utils/useAuthAxios';
 import useExerciseService, { ExerciseRecord } from './ExerciseService';
 import { WorkoutExerciseCreate } from '../states/CreateWorkoutState';
 import { Exercise } from '../components/exercise_search/ExerciseCard';
 import { WorkoutExerciseCurrent } from '../states/RunnigWorkoutState';
+import { WorkoutApi } from './api/workout.api';
 
 export interface WorkoutTemplate {
   id: string,
@@ -18,16 +18,6 @@ export interface TemplateExercise {
   repetitions?: number[];
   durations?: number[];
   exercise: Exercise
-}
-
-interface WorkoutRecordResponse {
-  id: string;
-  workoutId: string;
-  workoutTitle: string;
-  uid: string;
-  duration: number;
-  finishedAt: Date;
-  exerciseRecordIds: string[];
 }
 
 export interface Workout {
@@ -65,7 +55,7 @@ export interface WorkoutHistory {
   timeToComplete?: number;
 }[];
 
-interface WorkoutRecordRequest {
+export interface WorkoutRecordRequest {
   workoutId: string;
   timeToComplete?: number;
   exerciseRecords: ExerciseRecordRequest[]
@@ -81,25 +71,13 @@ interface ExerciseRecordRequest {
 export default function useWorkoutService() {
   const [workoutsPage, setWorkoutsPage] = useState(0);
 
-  const { getRecords } = useExerciseService();
-
-  const axios = useAxios();
+  const workkoutApi = WorkoutApi();
 
   const getWorkouts = async (): Promise<Workout[]> => {
-    try {
-      const response = await axios.get<Workout[]>(
-        `/workout?page=${workoutsPage}`,
-      );
-
-      return response.data;
-    } catch (error) {
-      if (error instanceof Object && 'message' in error) throw error;
-      throw handleError(error);
-    }
+    return workkoutApi.getWorkouts(workoutsPage);
   };
 
   const createWorkout = async (workout: WorkoutCreate) => {
-    try {
       const requestPayload: {title: string, templateExerciseStructures: any[]} = {
         title: workout.title,
         templateExerciseStructures: []
@@ -113,16 +91,10 @@ export default function useWorkoutService() {
         })
       })      
 
-      const response = await axios.post<string>('/workout', requestPayload); 
-
-      return response.data;
-    } catch (error) {
-      throw handleError(error);
-    }
+      return workkoutApi.createWorkout(requestPayload);
   };
 
   const createRecord = async (workoutRecord: CreateRecordRequest, exerciseRecordLocal: WorkoutExerciseCurrent[]) => {
-    try {
       const recordRequest: WorkoutRecordRequest = {
         workoutId: workoutRecord.workoutId,
         exerciseRecords: exerciseRecordLocal.map(record => {
@@ -141,25 +113,11 @@ export default function useWorkoutService() {
         })
       }      
 
-      await axios.post<string>(
-        '/workout/record',
-        recordRequest,
-      );
-
-    } catch (error) {
-      throw handleError(error);
-    }
+      workkoutApi.createRecord(recordRequest);
   };
 
   const getWorkoutHistory = async () => {
-    try {    
-      const records =
-        await axios.get<WorkoutHistory[]>('/workout/record');      
-
-      return records.data;
-    } catch (error) {
-      throw handleError(error);
-    }
+    return workkoutApi.getWorkoutHistory();
   };
 
   return { getWorkouts, createWorkout, createRecord, getWorkoutHistory };

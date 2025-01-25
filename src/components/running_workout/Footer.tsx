@@ -12,7 +12,6 @@ import {
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AuthStackProps } from "../../navigation/AuthNavigation";
 import useServiceCall from "../../utils/useServiceCall";
-import useExerciseService from "../../services/ExerciseService";
 import useWorkoutService from "../../services/WorkoutService";
 
 export default function Footer({
@@ -30,7 +29,6 @@ export default function Footer({
   const { colors } = useTheme();
   const [ErrorDialog, showDialog] = useErrorDialog();
 
-  const { createRecords } = useExerciseService();
   const { createRecord } = useWorkoutService();
   const { executeService, loading } = useServiceCall();
 

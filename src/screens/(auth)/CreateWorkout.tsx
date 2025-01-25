@@ -9,9 +9,7 @@ import {
   createExercisesAtom,
   createWorkoutAtom,
 } from '../../states/CreateWorkoutState';
-import useExerciseService from '../../services/ExerciseService';
 import useWorkoutService from '../../services/WorkoutService';
-import { showError, showMessage } from '../../services/utils';
 import useServiceCall from '../../utils/useServiceCall';
 import { AuthStackProps } from '../../navigation/AuthNavigation';
 import { addExercise } from '../../utils/exerciseHelpers';
@@ -22,7 +20,6 @@ export default function CreateWorkout({
 }: NativeStackScreenProps<AuthStackProps>) {
   const { colors } = useTheme();
 
-  const { createRecords } = useExerciseService();
   const { createWorkout } = useWorkoutService();
 
   const [title, setTitle] = useRecoilState(createWorkoutAtom);

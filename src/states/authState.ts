@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil';
-import { User } from '../api/auth.api';
+import { User } from '../services/api/auth.api';
 import { saveAuth } from '../stores/secureStore';
 
 export interface AuthState {
