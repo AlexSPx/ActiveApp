@@ -60,9 +60,7 @@ const layout = () => {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <QueryClientProvider client={queryClient}>
           <RecoilRoot>
-            <CacheRetriever
-              hideSplash={async () => await SplashScreen.hideAsync()}
-            >
+            <CacheRetriever>
                 <SafeAreaProvider>
                   <SettingsProvider>
                     <ColorsSchemeProvider>

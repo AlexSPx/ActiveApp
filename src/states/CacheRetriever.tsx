@@ -14,10 +14,8 @@ import React from 'react';
 
 export default function CacheRetriever({
   children,
-  hideSplash,
 }: {
   children: ReactNode;
-  hideSplash: () => void;
 }) {
   const setCurrentWorkout = useSetRecoilState(currentWorkoutAtom);
   const setCurrentExercises = useSetRecoilState(currentExercisesAtom);
@@ -64,10 +62,6 @@ export default function CacheRetriever({
     };
 
     fetch();
-  }, [auth]);
-
-  useEffect(() => {
-    setTimeout(() => hideSplash(), 200);
   }, [auth]);
 
   return <>{children}</>;
