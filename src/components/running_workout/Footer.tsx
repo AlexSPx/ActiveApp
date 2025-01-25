@@ -13,6 +13,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AuthStackProps } from "../../navigation/AuthNavigation";
 import useServiceCall from "../../utils/useServiceCall";
 import useWorkoutService from "../../services/WorkoutService";
+import refreshAtoms from "../../states/cache/RefreshAtoms";
 
 export default function Footer({
   navigation,
@@ -32,6 +33,8 @@ export default function Footer({
   const { createRecord } = useWorkoutService();
   const { executeService, loading } = useServiceCall();
 
+  const { refreshWorkoutHistoryData } = refreshAtoms();
+
   const handleResetWorkout = () => {
     resetWorkout();
     navigation.navigate("tabs");
@@ -50,6 +53,7 @@ export default function Footer({
       }, exercises);
     });
 
+    await refreshWorkoutHistoryData();
     handleResetWorkout();
   };
 

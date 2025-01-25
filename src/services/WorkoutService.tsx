@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { handleError } from './api/utils';
-import useAuthAxios from '../utils/useAuthAxios';
-import useExerciseService, { ExerciseRecord } from './ExerciseService';
+import { ExerciseRecord } from './ExerciseService';
 import { WorkoutExerciseCreate } from '../states/CreateWorkoutState';
 import { Exercise } from '../components/exercise_search/ExerciseCard';
 import { WorkoutExerciseCurrent } from '../states/RunnigWorkoutState';
 import { WorkoutApi } from './api/workout.api';
+import { useRecoilCallback, useRecoilState } from 'recoil';
+import { workoutHistoryAtom } from '../states/cache/WorkoutHistoryAtom';
+import { workoutAtom } from '../states/cache/WorkoutAtom';
 
 export interface WorkoutTemplate {
   id: string,
@@ -73,9 +74,31 @@ export default function useWorkoutService() {
 
   const workkoutApi = WorkoutApi();
 
-  const getWorkouts = async (): Promise<Workout[]> => {
-    return workkoutApi.getWorkouts(workoutsPage);
-  };
+  const getWorkouts = useRecoilCallback(({ snapshot, set }) => async () => {
+    // Get the latest workoutHistoryData from the Recoil snapshot
+    const workoutData = await snapshot.getPromise(workoutAtom);
+
+    if(
+      workoutData.updatedAt &&
+      new Date().getTime() - workoutData.updatedAt.getTime() < 1000 * 60 * 60 &&
+      workoutData.isValid
+    ) {
+      console.log('Cache is valid, returning workout data');
+
+      return workoutData.data;
+    } else {
+      console.log('Cache is invalid, fetching workout data');
+
+      const workouts = await workkoutApi.getWorkouts(workoutsPage);
+      set(workoutAtom,{
+        data: workouts,
+        updatedAt: new Date(),
+        isValid: true
+      });
+
+      return workouts;
+    }
+  });
 
   const createWorkout = async (workout: WorkoutCreate) => {
       const requestPayload: {title: string, templateExerciseStructures: any[]} = {
@@ -116,9 +139,32 @@ export default function useWorkoutService() {
       workkoutApi.createRecord(recordRequest);
   };
 
-  const getWorkoutHistory = async () => {
-    return workkoutApi.getWorkoutHistory();
-  };
+  const getWorkoutHistory = useRecoilCallback(({ snapshot, set }) => async () => {
+    // Get the latest workoutHistoryData from the Recoil snapshot
+    const workoutHistoryData = await snapshot.getPromise(workoutHistoryAtom);
+
+    if (
+      workoutHistoryData.updatedAt &&
+      new Date().getTime() - workoutHistoryData.updatedAt.getTime() < 1000 * 60 * 60 &&
+      workoutHistoryData.isValid
+    ) {
+      console.log('Cache is valid, returning workout history');
+      return workoutHistoryData.data;
+    } else {
+      console.log('Cache is invalid, fetching workout history');
+
+      const history = await workkoutApi.getWorkoutHistory();
+      // Update the Recoil state with the new data
+      set(workoutHistoryAtom, {
+        data: history,
+        updatedAt: new Date(),
+        isValid: true,
+      });
+
+      return history;
+    }
+  });
+
 
   return { getWorkouts, createWorkout, createRecord, getWorkoutHistory };
 }

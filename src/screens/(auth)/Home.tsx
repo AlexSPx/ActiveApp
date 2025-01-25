@@ -4,7 +4,7 @@ import { Text } from 'react-native-paper';
 import { useRecoilState } from 'recoil';
 import { authState } from '../../states/authState';
 import { View } from 'react-native';
-import { workoutHistory } from '../../states/WorkoutHistory';
+import { workoutHistoryAtom } from '../../states/cache/WorkoutHistoryAtom';
 import { WeekActivities } from '../../components/home/WeekActivity';
 import Widgets from '../../components/widgets/Widgets';
 
@@ -12,7 +12,7 @@ export default function Home() {
   const { colors } = useTheme();
 
   const [{ user }, _] = useRecoilState(authState);
-  const [history, _setHistory] = useRecoilState(workoutHistory);
+  const [history, _setHistory] = useRecoilState(workoutHistoryAtom);
 
   return (
     <MainView colors={colors}>
@@ -70,14 +70,14 @@ export default function Home() {
                 color: colors.secondary,
               }}
             >
-              workouts: {history.length}
+              workouts: {history.data.length}
             </Text>
           </View>
         </View>
       </View>
 
-      <WeekActivities colors={colors} history={history} />
-      <Widgets history={history} />
+      <WeekActivities colors={colors} history={history.data} />
+      <Widgets history={history.data} />
     </MainView>
   );
 }

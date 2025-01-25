@@ -14,6 +14,7 @@ import useServiceCall from '../../utils/useServiceCall';
 import { AuthStackProps } from '../../navigation/AuthNavigation';
 import { addExercise } from '../../utils/exerciseHelpers';
 import InvokeSearch from '../../components/search_exercise/InvokeSearch';
+import refreshAtoms from '../../states/cache/RefreshAtoms';
 
 export default function CreateWorkout({
   navigation,
@@ -26,6 +27,7 @@ export default function CreateWorkout({
   const [exercises, setExercises] = useRecoilState(createExercisesAtom);
 
   const { executeService, loading } = useServiceCall();
+  const {refreshWorkoutData} = refreshAtoms();
 
   const cancelCreating = () => {
     setExercises([]);
@@ -40,6 +42,8 @@ export default function CreateWorkout({
       });
     });
 
+
+    await refreshWorkoutData();
     navigation.goBack();
     cancelCreating();
   };

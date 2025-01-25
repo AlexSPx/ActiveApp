@@ -1,35 +1,30 @@
-import React, { useEffect, useState } from "react";
-import useWorkoutService, {
-  Workout,
-  WorkoutRecordWE,
-} from "../../services/WorkoutService";
+import React, { useMemo, useState } from "react";
+import useWorkoutService from "../../services/WorkoutService";
 import MainView from "../../components/MainView";
-import { FAB, useTheme, Text, Button } from "react-native-paper";
+import { FAB, useTheme } from "react-native-paper";
 import { FlatList, RefreshControl } from "react-native";
 import { WorkoutCard } from "../../components/user_workouts/WorkoutCard";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import useQuery from "../../utils/useQuery";
+import { useRecoilValue } from "recoil";
+import { workoutAtom } from "../../states/cache/WorkoutAtom";
 
 export default function Workouts({ navigation }: NativeStackScreenProps<any>) {
+  const workoutsData = useRecoilValue(workoutAtom);  
   const { getWorkouts } = useWorkoutService();
-
-  const {
-    data: workouts,
-    loading,
-    refresh,
-  } = useQuery<Workout[]>({
-    serviceCall: () => getWorkouts(),
-  });
-
+  
   const { colors } = useTheme();
 
   const [refreshing, setRefreshing] = useState(false);
-
   const onRefresh = () => {
     setRefreshing(true);
-    refresh();
-    setRefreshing(false);
+    try {
+      getWorkouts();
+    } finally {
+      setRefreshing(false);
+    }
   };
+
+  const workouts = useMemo(() => workoutsData.data, [workoutsData.updatedAt]);
 
   return (
     <MainView colors={colors}>

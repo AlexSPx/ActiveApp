@@ -7,7 +7,6 @@ import {
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { currentExercisesAtom, currentWorkoutAtom } from './RunnigWorkoutState';
 import { authState } from './authState';
-import { workoutHistory } from './WorkoutHistory';
 import useWorkoutService from '../services/WorkoutService';
 import { storage } from '../stores/storage';
 import { widgetsState } from './Widgets';
@@ -22,17 +21,16 @@ export default function CacheRetriever({
 }) {
   const setCurrentWorkout = useSetRecoilState(currentWorkoutAtom);
   const setCurrentExercises = useSetRecoilState(currentExercisesAtom);
-  const setWorkoutHistory = useSetRecoilState(workoutHistory);
   const setWidgets = useSetRecoilState(widgetsState);
 
   const [auth, setAuthState] = useRecoilState(authState);
 
-  const { getWorkoutHistory } = useWorkoutService();
+  const { getWorkoutHistory, getWorkouts } = useWorkoutService();
 
   useEffect(() => {
     const userCache = async () => {
       const auth = await getAuth();
-
+      
       if (auth) {
         setAuthState(auth);
       }
@@ -61,8 +59,8 @@ export default function CacheRetriever({
     const fetch = async () => {
       if (!auth.isAuthenticated) return;
 
-      const workoutHistory = await getWorkoutHistory();
-      setWorkoutHistory(workoutHistory);
+      await getWorkoutHistory();
+      await getWorkouts();
     };
 
     fetch();

@@ -11,8 +11,8 @@ import {
 } from '../../components/workout_history/HistoryCard';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import useQuery from '../../utils/useQuery';
-import { useRecoilState } from 'recoil';
-import { workoutHistory } from '../../states/WorkoutHistory';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { workoutHistoryAtom } from '../../states/cache/WorkoutHistoryAtom';
 
 export default function WorkoutHistory({
   navigation,
@@ -20,25 +20,17 @@ export default function WorkoutHistory({
   const { colors } = useTheme();
 
   const { getWorkoutHistory } = useWorkoutService();
-  const [history, setHistory] = useRecoilState(workoutHistory);
+  const historyData = useRecoilValue(workoutHistoryAtom);
 
-  const { loading, refresh } = useQuery<WorkoutHistoryProps[]>({
-    serviceCall: () => getWorkoutHistory(),
-    cache: {
-      update: setHistory,
-    },
-    initialFetch: false,
-  });
-
+  
   const [orderedRecords, setOrderedRecords] =
     useState<Map<string, Map<string, WorkoutHistoryProps[]>>>();
 
   const [refreshing, setRefreshing] = useState(false);
-
   const onRefresh = () => {
     setRefreshing(true);
     try {
-      refresh();
+      getWorkoutHistory();
     } finally {
       setRefreshing(false);
     }
@@ -53,7 +45,7 @@ export default function WorkoutHistory({
       year: 'numeric',
     };
 
-    history?.forEach((record) => {
+    historyData.data?.forEach((record) => {
       const date = new Date(record.createdAt);
 
       const dateSplit = Intl.DateTimeFormat('en-US', formatOptions)
@@ -80,7 +72,7 @@ export default function WorkoutHistory({
     setOrderedRecords(monthMap);
 
     setRefreshing(false);
-  }, [history]);
+  }, [historyData.updatedAt]);
 
   return (
     <MainView colors={colors}>
