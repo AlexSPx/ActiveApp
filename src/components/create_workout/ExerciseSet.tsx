@@ -63,15 +63,9 @@ const WorkoutTabelCell = ({
 }) => {
   const [inputValue, setInputValue] = useState(value);
 
-  const debouncedOnChange = useCallback(
-    debounce((text: string) => onChange(text), 300),
-    []
-  );
-
-  const handleInputChange = (text: string) => {
-    setInputValue(text);
-    debouncedOnChange(text);
-  };
+  const handleBlur = () => {
+    onChange(inputValue);    
+  }
   return (
     <DataTable.Cell style={{ justifyContent: "center" }}>
       <TextInput
@@ -88,7 +82,9 @@ const WorkoutTabelCell = ({
           borderRadius: 30,
         }}
         value={inputValue}
-        onChangeText={(text) => handleInputChange(text)}
+        onChangeText={setInputValue}
+        onBlur={handleBlur}
+        onSubmitEditing={handleBlur}
       />
     </DataTable.Cell>
   );
