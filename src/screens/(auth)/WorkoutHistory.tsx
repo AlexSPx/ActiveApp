@@ -2,35 +2,33 @@ import React, { useEffect, useState } from 'react';
 import MainView from '../../components/MainView';
 import { FlatList, RefreshControl, View } from 'react-native';
 import { useTheme, Text } from 'react-native-paper';
-import useWorkoutService, {
+import {
   WorkoutHistory as WorkoutHistoryProps,
 } from '../../services/WorkoutService';
 import {
   HistoryCard,
-  HistoryCardLoading,
 } from '../../components/workout_history/HistoryCard';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import useQuery from '../../utils/useQuery';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { workoutHistoryAtom } from '../../states/cache/WorkoutHistoryAtom';
+import refreshAtoms from '../../states/cache/RefreshAtoms';
 
 export default function WorkoutHistory({
   navigation,
 }: NativeStackScreenProps<any>) {
   const { colors } = useTheme();
 
-  const { getWorkoutHistory } = useWorkoutService();
   const historyData = useRecoilValue(workoutHistoryAtom);
-
+  const { refreshWorkoutHistoryData } = refreshAtoms();
   
   const [orderedRecords, setOrderedRecords] =
     useState<Map<string, Map<string, WorkoutHistoryProps[]>>>();
 
   const [refreshing, setRefreshing] = useState(false);
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setRefreshing(true);
     try {
-      getWorkoutHistory();
+      await refreshWorkoutHistoryData();
     } finally {
       setRefreshing(false);
     }

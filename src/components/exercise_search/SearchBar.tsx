@@ -1,7 +1,6 @@
 import {
   ActivityIndicator,
   Keyboard,
-  TouchableOpacity,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
