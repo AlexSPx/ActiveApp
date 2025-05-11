@@ -3,8 +3,8 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Card, useTheme, Text } from "react-native-paper";
 import { getBestSet } from "../../utils/getBestSet";
 import { WorkoutHistory } from "../../services/WorkoutService";
-// import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useRef } from "react";
+import { TotalWeight } from "./TotalWeight";
 
 export const HistoryCard = ({
   record,
@@ -62,6 +62,16 @@ export const HistoryCard = ({
             </View>
           );
         })}
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 8,
+          }}
+          >
+            <TotalWeight exerciseRecords={record.exerciseRecords} size={13.5}/>
+          </View>
       </TouchableOpacity>
     </Card>
   );
@@ -84,11 +94,6 @@ export const HistoryCardLoading = () => {
 
     animateSkeleton();
   }, [animatedValue]);
-
-  const gradientColors = animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["#ff0000", "#00ff00"], // Start color to end color
-  });
 
   return (
     <View style={styles.container}>
