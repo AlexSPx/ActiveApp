@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { createExercisesAtom } from "../../states/CreateWorkoutState";
 import { DataTable, TextInput, useTheme } from "react-native-paper";
@@ -64,18 +64,19 @@ const WorkoutTabelCell = ({
   const [inputValue, setInputValue] = useState(value);
 
   const handleBlur = () => {
-    onChange(inputValue);    
+    onChange(inputValue);
   }
   return (
-    <DataTable.Cell style={{ justifyContent: "center" }}>
+    <DataTable.Cell style={{ justifyContent: "center", height: "100%", paddingVertical: "2%" }}>
       <TextInput
         underlineColor="transperent"
         keyboardType="numeric"
         style={{
+          flex: 1,
+          maxWidth: 110,
           height: 30,
           paddingHorizontal: 2,
           textAlign: "center",
-          width: 60,
           borderRadius: 5,
         }}
         outlineStyle={{
@@ -89,19 +90,5 @@ const WorkoutTabelCell = ({
     </DataTable.Cell>
   );
 };
-
-function debounce<T extends (...args: any[]) => void>(func: T, delay: number) {
-  let timeoutId: ReturnType<typeof setTimeout>;
-
-  return function (...args: Parameters<T>) {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-
-    timeoutId = setTimeout(() => {
-      func(...args);
-    }, delay);
-  };
-}
 
 export default memo(ExerciseSet);

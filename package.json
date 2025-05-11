@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start --dev-client",
-    "start:a": "REACT_NATIVE_PACKAGER_HOSTNAME=192.168.0.8 expo start --dev-client --tunnel",
+    "local": "EXPO_PUBLIC_API_URL=http://localhost:8080 expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web"
