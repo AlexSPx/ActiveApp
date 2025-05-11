@@ -8,6 +8,8 @@ import { ExerciseRecord } from "../../services/ExerciseService";
 import { useMemo } from "react";
 import { MD3Colors } from "react-native-paper/lib/typescript/types";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { calculateTotalWeight } from "../../utils/calculateTotalWeight";
+import { TotalWeight } from "../../components/workout_history/TotalWeight";
 
 type Props = NativeStackScreenProps<AuthStackProps, "workoutHistoryView">;
 
@@ -94,27 +96,6 @@ function SetRecordView({
       <Text variant="bodyMedium" style={[styles.setText, { color: colors.onSurfaceVariant }]}>
         {`${oneRepMax}kg`}
       </Text>
-    </View>
-  );
-}
-
-function TotalWeight({ exerciseRecords }: { exerciseRecords: ExerciseRecord[] }) {
-  const totalWeight = useMemo(() => {
-    return exerciseRecords.reduce(
-      (total, { weights, repetitions }) =>
-        total +
-        weights.reduce(
-          (sum, weight, index) => sum + weight * repetitions[index],
-          0
-        ),
-      0
-    );
-  }, [exerciseRecords]);
-
-  return (
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
-      <Icon name="weight-hanging" size={15} style={{ marginRight: 8 }} />
-      <Text variant="titleLarge" style={{ marginTop: 1 }}>{totalWeight}kg</Text>
     </View>
   );
 }
